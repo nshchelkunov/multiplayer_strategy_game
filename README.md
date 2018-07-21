@@ -1,2 +1,3 @@
-# multiplayer_strategy_game
-Client - server strategy with hexagon based map
+Прототип клиента на Unity простой гексагональной стратегии.
+Находится в разработке.
+

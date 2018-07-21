@@ -4,24 +4,26 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class MouseManager : MonoBehaviour 
-{
-
-	//string pressedFirst, pressedSecond; // Нажатие на гекс игрока
-	public Color playerСolor = Color.blue; // Цвет гекса игрока
-
+{	
+	public Color playerСolor = Color.blue; 
 
 	void Update () 
-	{
-		if (EventSystem.current.IsPointerOverGameObject()) // EventSystem.current Возвращает текущее EventSystem.
+	{	
+		// EventSystem.current Возвращает текущее EventSystem.
+		if (EventSystem.current.IsPointerOverGameObject()) 
 		{
 			return;
 		}
-		Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition); // Создает луч в точку, где находится указатель мыши
-		RaycastHit hitInfo; // Структура, для хранения инфо о поверхности
+		// Создает луч в точку, где находится указатель мыши
+		Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition); 
+		// Структура, для хранения инфо о поверхности
+		RaycastHit hitInfo; 
 		
-		if (Physics.Raycast (ray, out hitInfo)) // Если луч встречат коллайдер, то возвращает тру + структуру данных
+		// Если луч встречат коллайдер, то возвращает "истина" + структуру данных
+		if (Physics.Raycast (ray, out hitInfo)) 
 		{
-			GameObject ourHitObject = hitInfo.collider.transform.parent.gameObject; // Доступ к обьекту, на котором мышь
+			// Доступ к обьекту, на котором мышь
+			GameObject ourHitObject = hitInfo.collider.transform.parent.gameObject; 
 
 			if (ourHitObject.GetComponent<Hex>() != null)
 			{
@@ -32,22 +34,27 @@ public class MouseManager : MonoBehaviour
 	
 	void MouseOver_Hex (GameObject ourHitObject)
 	{
-		if (Input.GetMouseButtonDown(0)) // Если нажата левая кнопка мыши
+		// Если нажата левая кнопка мыши
+		if (Input.GetMouseButtonDown(0)) 
 		{	
 			GameObject mapObject = GameObject.Find("Map");
+			// GetComponentInChildren(Type t) возвращяет компонент типа t
+			MeshRenderer mr =  ourHitObject.GetComponentInChildren<MeshRenderer>(); 
 			
-			MeshRenderer mr =  ourHitObject.GetComponentInChildren<MeshRenderer>(); // GetComponentInChildren(Type t) возвращяет компонент типа t
-			
-			int x = ourHitObject.GetComponent<Hex>().x; // Сохраняем координаты гекса
+			// Сохраняем координаты гекса
+			int x = ourHitObject.GetComponent<Hex>().x; 
 			int y = ourHitObject.GetComponent<Hex>().y;
 
-			if (mr.material.color == playerСolor) // Если это гекс игрока, то подсвечиваем возможные ходы
+			// Если это гекс игрока, то подсвечиваем возможные ходы
+			if (mr.material.color == playerСolor) 
 			{
-				mapObject.GetComponent<Map>().ClearBacklight (); //Убрать подсветку
+				//Убрать подсветку
+				mapObject.GetComponent<Map>().ClearBacklight (); 
 
 				if (y % 2 == 1)
 				{
-					mapObject.GetComponent<Map>().BacklightStrokes (x, y, ref mapObject.GetComponent<Map>().neighborsOfOdd); //Новая подсветка
+					//Новая подсветка
+					mapObject.GetComponent<Map>().BacklightStrokes (x, y, ref mapObject.GetComponent<Map>().neighborsOfOdd); 
 				}
 				else
 				{
@@ -57,11 +64,12 @@ public class MouseManager : MonoBehaviour
 			else
 			{
 				string name = "Hex_" + x  + "_" + y;
-				if (mapObject.GetComponent<Map>().neighbors.Contains(name)) // Если этот ход возможен (был подсвеченным)
+				// Если этот ход возможен (был подсвеченным)
+				if (mapObject.GetComponent<Map>().neighbors.Contains(name)) 
 				{
-					//Debug.Log ("Если этот ход возможен (был подсвеченным)" + name);
 					// Отправить на сервер
-					mapObject.GetComponent<Map>().ClearBacklight(); //Убрать подсветку
+					// Убрать подсветку
+					mapObject.GetComponent<Map>().ClearBacklight(); 
 				}
 			}
 		}
